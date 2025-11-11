@@ -9,6 +9,15 @@ export INFOPATH="${BREW_HOME}/share/info:$INFOPATH"
 export PATH="${BREW_HOME}/opt/coreutils/libexec/gnubin:$PATH"
 export MANPATH="${BREW_HOME}/opt/coreutils/libexec/gnuman:$MANPATH"
 
+# binutils
+export PATH="${BREW_HOME}/opt/binutils/bin:$PATH"
+export LDFLAGS="-L${BREW_HOME}/opt/binutils/lib ${LDFLAGS:-}"
+export CPPFLAGS="-I${BREW_HOME}/opt/binutils/include ${CPPFLAGS:-}"
+
+# diffutils
+export PATH="${BREW_HOME}/opt/diffutils/libexec/gnubin:$PATH"
+export MANPATH="${BREW_HOME}/opt/diffutils/libexec/gnuman:$MANPATH"
+
 # make
 export PATH="${BREW_HOME}/opt/make/libexec/gnubin:$PATH"
 export MANPATH="${BREW_HOME}/opt/make/libexec/gnuman:$MANPATH"
@@ -27,17 +36,17 @@ export PATH="${BREW_HOME}/opt/python/libexec/bin:$PATH"
 
 # flex
 export PATH="${BREW_HOME}/opt/flex/bin:$PATH"
-export LDFLAGS="-L${BREW_HOME}/opt/flex/lib"
-export CPPFLAGS="-I${BREW_HOME}/opt/flex/include"
+export LDFLAGS="-L${BREW_HOME}/opt/flex/lib ${LDFLAGS:-}"
+export CPPFLAGS="-I${BREW_HOME}/opt/flex/include ${CPPFLAGS:-}"
 
 # bison
 export PATH="${BREW_HOME}/opt/bison/bin:$PATH"
-export LDFLAGS="-L${BREW_HOME}/opt/bison/lib"
+export LDFLAGS="-L${BREW_HOME}/opt/bison/lib ${LDFLAGS:-}"
 
 # libressl
 export PATH="${BREW_HOME}/opt/libressl/bin:$PATH"
-export LDFLAGS="-L${BREW_HOME}/opt/libressl/lib"
-export CPPFLAGS="-I${BREW_HOME}/opt/libressl/include"
+export LDFLAGS="-L${BREW_HOME}/opt/libressl/lib ${LDFLAGS:-}"
+export CPPFLAGS="-I${BREW_HOME}/opt/libressl/include ${CPPFLAGS:-}"
 export PKG_CONFIG_PATH="${BREW_HOME}/opt/libressl/lib/pkgconfig"
 
 # ed
@@ -60,5 +69,21 @@ export PATH="${BREW_HOME}/opt/gnu-which/libexec/gnubin:$PATH"
 
 # grep
 export PATH="${BREW_HOME}/opt/grep/libexec/gnubin:$PATH"
+
+# gawk
+export PATH="${BREW_HOME}/opt/gawk/libexec/gnubin:$PATH"
+export MANPATH="${BREW_HOME}/opt/gawk/libexec/gnuman:$MANPATH"
+
+# gzip
+export PATH="${BREW_HOME}/opt/gzip/bin:$PATH"
+export MANPATH="${BREW_HOME}/opt/gzip/share/man:$MANPATH"
+
+# wdiff
+export PATH="${BREW_HOME}/opt/wdiff/bin:$PATH"
+export MANPATH="${BREW_HOME}/opt/wdiff/share/man:$MANPATH"
+
+# gpatch
+export PATH="${BREW_HOME}/opt/gpatch/bin:$PATH"
+export MANPATH="${BREW_HOME}/opt/gpatch/share/man:$MANPATH"
 
 unset BREW_HOME
