@@ -129,7 +129,55 @@ linuxify_install() {
 
     # Make changes to PATH/MANPATH/INFOPATH/LDFLAGS/CPPFLAGS
     cp .linuxify ~/.linuxify
-    echo "Add '. ~/.linuxify' to your ~/.bashrc, ~/.zshrc or your shell's equivalent config file"
+    echo "Created ~/.linuxify configuration file"
+
+    # Automatically add sourcing to shell config
+    LINUXIFY_SOURCE_LINE="[ -f ~/.linuxify ] && . ~/.linuxify"
+
+    if [[ "$SHELL" =~ zsh ]]; then
+        # Using zsh
+        SHELL_CONFIG="$HOME/.zshrc"
+        if [ -f "$SHELL_CONFIG" ]; then
+            if ! grep -qF '~/.linuxify' "$SHELL_CONFIG"; then
+                echo "" >> "$SHELL_CONFIG"
+                echo "# Linuxify - GNU utilities" >> "$SHELL_CONFIG"
+                echo "$LINUXIFY_SOURCE_LINE" >> "$SHELL_CONFIG"
+                echo "Added linuxify to $SHELL_CONFIG"
+            else
+                echo "Linuxify already configured in $SHELL_CONFIG"
+            fi
+        else
+            echo "$LINUXIFY_SOURCE_LINE" > "$SHELL_CONFIG"
+            echo "Created $SHELL_CONFIG with linuxify configuration"
+        fi
+    elif [[ "$SHELL" =~ bash ]]; then
+        # Using bash - try .bash_profile first, then .bashrc
+        if [ -f "$HOME/.bash_profile" ]; then
+            SHELL_CONFIG="$HOME/.bash_profile"
+        else
+            SHELL_CONFIG="$HOME/.bashrc"
+        fi
+        
+        if [ -f "$SHELL_CONFIG" ]; then
+            if ! grep -qF '~/.linuxify' "$SHELL_CONFIG"; then
+                echo "" >> "$SHELL_CONFIG"
+                echo "# Linuxify - GNU utilities" >> "$SHELL_CONFIG"
+                echo "$LINUXIFY_SOURCE_LINE" >> "$SHELL_CONFIG"
+                echo "Added linuxify to $SHELL_CONFIG"
+            else
+                echo "Linuxify already configured in $SHELL_CONFIG"
+            fi
+        else
+            echo "$LINUXIFY_SOURCE_LINE" > "$SHELL_CONFIG"
+            echo "Created $SHELL_CONFIG with linuxify configuration"
+        fi
+    else
+        echo "Unrecognized shell: $SHELL"
+        echo "Please manually add '$LINUXIFY_SOURCE_LINE' to your shell's config file"
+    fi
+
+    echo ""
+    echo "Restart your shell or run 'source ~/.linuxify' to activate GNU utilities"
 }
 
 linuxify_uninstall() {
@@ -182,7 +230,30 @@ linuxify_uninstall() {
 
     # Remove changes to PATH/MANPATH/INFOPATH/LDFLAGS/CPPFLAGS
     rm -f ~/.linuxify
-    echo "Remove '. ~/.linuxify' from your ~/.bashrc, ~/.zshrc or your shell's equivalent config file"
+
+    # Automatically remove sourcing from shell config
+    if [[ "$SHELL" =~ zsh ]]; then
+        SHELL_CONFIG="$HOME/.zshrc"
+    elif [[ "$SHELL" =~ bash ]]; then
+        if [ -f "$HOME/.bash_profile" ]; then
+            SHELL_CONFIG="$HOME/.bash_profile"
+        else
+            SHELL_CONFIG="$HOME/.bashrc"
+        fi
+    else
+        SHELL_CONFIG=""
+    fi
+
+    if [ -n "$SHELL_CONFIG" ] && [ -f "$SHELL_CONFIG" ]; then
+        # Remove linuxify lines (both the comment and the source line)
+        sed -i.bak '/# Linuxify - GNU utilities/d' "$SHELL_CONFIG"
+        sed -i.bak '/\.linuxify/d' "$SHELL_CONFIG"
+        # Remove backup file
+        rm -f "${SHELL_CONFIG}.bak"
+        echo "Removed linuxify from $SHELL_CONFIG"
+    else
+        echo "Please manually remove '. ~/.linuxify' from your shell's config file"
+    fi
 }
 
 linuxify_info() {
